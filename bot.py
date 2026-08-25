@@ -21,6 +21,7 @@ from aiogram.types import (
 from database import Database
 
 TOKEN = os.getenv("BOT_TOKEN")
+
 ADMIN_ID = 7499731115
 CHANNEL_ID = -1003927424016
 CHANNEL_URL = "https://t.me/KV1ZER"
