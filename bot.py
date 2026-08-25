@@ -20,16 +20,26 @@ from aiogram.types import (
 )
 from database import Database
 
+from fastapi import FastAPI
+from uvicorn import Config, Server
+
 TOKEN = os.getenv("BOT_TOKEN")
+if not TOKEN:
+    raise RuntimeError("BOT_TOKEN не задан в переменных окружения")
+
 
 ADMIN_ID = 7499731115
 CHANNEL_ID = -1003927424016
 CHANNEL_URL = "https://t.me/KV1ZER"
 
+app = FastAPI()
+
 bot = Bot(token=TOKEN)
 dp = Dispatcher(storage=MemoryStorage())
 db = Database()
 logging.basicConfig(level=logging.INFO)
+
+
 
 # --- УНИВЕРСАЛЬНАЯ КНОПКА ОТМЕНЫ ---
 cancel_kb = InlineKeyboardMarkup(
@@ -1846,12 +1856,32 @@ async def take_task(call: CallbackQuery, state: FSMContext):
   await call.answer()
 
 
+
+@app.get("/")
+async def root():
+    return {"status": "ok", "service": "kvizer-bot"}
+
+@app.get("/health")
+async def health():
+    return {"ok": True}
+
+async def run_http_server():
+    config = Config(app, host="0.0.0.0", port=int(os.getenv("PORT", 8000)))
+    server = Server(config)
+    await server.serve()
+
+
 # --- ЗАПУСК ---
 async def main():
+
+
+
   try:
-    await db.create_pool()
+    http_task = asyncio.create_task(run_http_server())
+#    await db.create_pool()
     print("Бот успешно запущен!")
     await dp.start_polling(bot)
+    http_task.cancel
   except TelegramUnauthorizedError:
     print("\n❌ ОШИБКА: Токен бота неверный или устарел!\n")
 

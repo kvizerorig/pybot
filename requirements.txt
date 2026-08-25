@@ -1,3 +1,5 @@
 aiosqlite
 aiogram
 python-dotenv
+fastapi
+uvicorn
