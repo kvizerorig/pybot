@@ -2,6 +2,7 @@ import asyncio
 import html
 import logging
 import time
+import os
 from aiogram import Bot, Dispatcher, F, types
 from aiogram.exceptions import TelegramUnauthorizedError
 from aiogram.filters import Command, CommandStart
@@ -19,7 +20,7 @@ from aiogram.types import (
 )
 from database import Database
 
-TOKEN = "8836023816:AAEDj8SfauYHfWKN_CDhpx3iSdV2PlKZl3I"
+TOKEN = os.getenv("BOT_TOKEN")
 ADMIN_ID = 7499731115
 CHANNEL_ID = -1003927424016
 CHANNEL_URL = "https://t.me/KV1ZER"
